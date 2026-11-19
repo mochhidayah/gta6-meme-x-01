@@ -11,6 +11,7 @@
 //   mkdir -p out && MAKEFUN_BOT_DIR=. MAKEFUN_OUTPUT_DIR=out node main.ts
 
 import { copyFileSync, mkdirSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const BOT_DIR = process.env.MAKEFUN_BOT_DIR ?? '/bot';
@@ -18,7 +19,13 @@ const OUTPUT_DIR = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
 mkdirSync(OUTPUT_DIR, { recursive: true });
 try {
+  const post = JSON.parse(readFileSync(join(BOT_DIR, 'POST.json'), 'utf8'));
+  if (typeof post.url !== 'string' || !post.url.startsWith('https://x.com/')) {
+    throw new Error('POST.json must name an https://x.com/ post URL');
+  }
+  console.log(`post: ${post.url}`);
   copyFileSync(join(BOT_DIR, 'POST.json'), join(OUTPUT_DIR, 'POST.json'));
+  console.log('files copied: 1');
 } catch (err) {
   console.error(`POST.json could not be copied from ${BOT_DIR}: ${(err as Error).message}`);
   process.exit(1);
