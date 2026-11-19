@@ -25,7 +25,8 @@ try {
   }
   console.log(`post: ${post.url}`);
   copyFileSync(join(BOT_DIR, 'POST.json'), join(OUTPUT_DIR, 'POST.json'));
-  console.log('files copied: 1');
+  const copiedFiles = ['POST.json'];
+  console.log(`files copied: ${copiedFiles.length} (${copiedFiles.join(', ')})`);
 } catch (err) {
   console.error(`POST.json could not be copied from ${BOT_DIR}: ${(err as Error).message}`);
   process.exit(1);
